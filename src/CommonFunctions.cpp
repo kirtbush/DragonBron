@@ -1,4 +1,5 @@
 #include "CommonFunctions.h"
+#include "SDL_image.h"
 
 namespace DragonBron
 {

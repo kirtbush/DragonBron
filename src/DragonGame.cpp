@@ -24,16 +24,14 @@ namespace DragonBron
         SDL_Surface *icon = IMG_Load( "res/dragon_icon.png" );
         SDL_SetWindowIcon( window, icon );
 
-        background = NULL;
-        face = NULL;
+        m_pBron = new Character( "res/dragon_right.png", renderer );
+        m_characters.push_back( m_pBron );
         //background = DragonBron::LoadImage( "res/background.bmp", renderer );
      }
 
     DragonGame::~DragonGame()
     {
         //dtor
-        SDL_DestroyTexture( background );
-        SDL_DestroyTexture( face );
 
         SDL_DestroyRenderer( renderer );
         SDL_DestroyWindow( window );
@@ -50,13 +48,34 @@ namespace DragonBron
 //            if( event.type == SDL_QUIT )
 //                std::cout<< "Quitting!\n";
 //                return 0;
-            if ( event.type == SDL_KEYDOWN )
+            switch ( event.type )
             {
-                if( event.key.keysym.scancode == SDL_SCANCODE_ESCAPE )
-                {
-                    std::cout<< "Got an escape!\n";
-                    return 0;
-                }
+                case SDL_KEYDOWN:
+                    switch( event.key.keysym.sym )
+                    {
+                        case SDLK_LEFT:
+                            m_pBron->ChangeAccelX(-0.1);
+                            break;
+                        case SDLK_RIGHT:
+                            m_pBron->ChangeAccelX(0.1);
+                            break;
+                        case SDLK_UP:
+                            m_pBron->ChangeAccelY(-0.1);
+                            break;
+                        case SDLK_DOWN:
+                            m_pBron->ChangeAccelY(0.1);
+                            break;
+                        case SDLK_ESCAPE:
+                            std::cout<< "Got an escape!\n";
+                            return 0;
+                        default:
+                            m_pBron->accelerationX = 0.0;
+                            m_pBron->accelerationY = 0.0;
+                            break;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -76,6 +95,13 @@ namespace DragonBron
 
         SDL_DestroyTexture( bg1 );
         SDL_DestroyTexture( bg2 );
+
+        //draw the characters
+        for (std::vector<Character *>::iterator iter = m_characters.begin(); iter != m_characters.end(); ++iter)
+        {
+            (*iter)->CalculateMovement();
+            (*iter)->Draw();
+        }
 
         SDL_RenderPresent( renderer );
 

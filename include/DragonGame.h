@@ -8,6 +8,7 @@
 
 #include "SDL.h"
 #include "SDL_image.h"
+#include "Character.h"
 
 namespace DragonBron
 {
@@ -18,13 +19,12 @@ class DragonGame
         DragonGame();
         virtual ~DragonGame();
         int GameLoop();
-
+        std::vector<Character *> m_characters;
+        Character *m_pBron;
     protected:
     private:
         SDL_Window *window;
         SDL_Renderer *renderer;
-        SDL_Texture *background;
-        SDL_Texture *face;
 
 };
 };

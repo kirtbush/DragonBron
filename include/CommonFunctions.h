@@ -8,6 +8,9 @@
 #include "SDL.h"
 #include "SDL_image.h"
 
+#define MAXIMUM_MOVEMENT 10
+#define MAXIMUM_ACCEL    2.0
+
 namespace DragonBron
 {
 const int SCREEN_WIDTH = 640;

@@ -4,26 +4,36 @@
 	<windows.h>
 	"DragonGame.h"
 
-1376542726 d:\dev\dragonbron\include\dragongame.h
+1376621288 d:\dev\dragonbron\include\dragongame.h
 	<iostream>
 	<string>
 	<stdexcept>
 	<vector>
 	"SDL.h"
 	"SDL_image.h"
+	"Character.h"
 
-1376546158 source:d:\dev\dragonbron\src\dragongame.cpp
+1376628595 source:d:\dev\dragonbron\src\dragongame.cpp
 	"DragonGame.h"
 	"CommonFunctions.h"
 	<math.h>
 
-1376533968 source:d:\dev\dragonbron\src\commonfunctions.cpp
+1376616400 source:d:\dev\dragonbron\src\commonfunctions.cpp
 	"CommonFunctions.h"
+	"SDL_image.h"
 
-1376533958 d:\dev\dragonbron\include\commonfunctions.h
+1376627404 d:\dev\dragonbron\include\commonfunctions.h
 	<iostream>
 	<string>
 	<stdexcept>
 	"SDL.h"
 	"SDL_image.h"
+
+1376627667 source:d:\dev\dragonbron\src\character.cpp
+	"Character.h"
+
+1376627219 d:\dev\dragonbron\include\character.h
+	<string>
+	"SDL.h"
+	"CommonFunctions.h"
 
