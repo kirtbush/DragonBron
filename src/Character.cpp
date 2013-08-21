@@ -1,5 +1,6 @@
 #include "Character.h"
 
+using namespace std;
 
 namespace DragonBron
 {
@@ -9,6 +10,10 @@ Character::Character( std::string file, SDL_Renderer * renderer )
     //ctor
     m_pRenderer = renderer;
     m_pTexture = DragonBron::LoadImage(file, m_pRenderer);
+    if(m_pTexture != NULL)
+    {
+        SDL_QueryTexture(m_pTexture, NULL, NULL, &width, &height);
+    }
     x = 0;
     y = 0;
     friction = 0.1;
@@ -30,29 +35,29 @@ void Character::Draw()
 
 }
 
-void Character::CalculateMovement()
+void Character::CalculateMovement(double windowWidth, double windowHeight)
 {
     double newvelocityX = 0.0;
     double newvelocityY = 0.0;
     double time = 1.0;
 
-    if( accelerationX < 0.0 )
-    {
-        accelerationX += friction;
-    }
-    else if( accelerationX > 0.0 )
-    {
-        accelerationX -= friction;
-    }
-
-    if( accelerationY < 0.0 )
-    {
-        accelerationY += friction;
-    }
-    else if( accelerationY > 0.0 )
-    {
-        accelerationY -= friction;
-    }
+//    if( accelerationX < 0.0 )
+//    {
+//        accelerationX += friction;
+//    }
+//    else if( accelerationX > 0.0 )
+//    {
+//        accelerationX -= friction;
+//    }
+//
+//    if( accelerationY < 0.0 )
+//    {
+//        accelerationY += friction;
+//    }
+//    else if( accelerationY > 0.0 )
+//    {
+//        accelerationY -= friction;
+//    }
 
     if( velocityX < 0.0 )
     {
@@ -61,6 +66,10 @@ void Character::CalculateMovement()
     else if( velocityX > 0.0 )
     {
         newvelocityX = velocityX + accelerationX * time;
+    }
+    else
+    {
+        newvelocityX = accelerationX * time;
     }
 
     if( velocityY < 0.0 )
@@ -71,14 +80,49 @@ void Character::CalculateMovement()
     {
         newvelocityY = velocityY + accelerationY * time;
     }
+    else
+    {
+        newvelocityY = accelerationY * time;
+    }
 
-    newvelocityY = velocityY - accelerationY * time;
+    //newvelocityY = velocityY - accelerationY * time;
+
+    cout<<__FUNCTION__ << " newvelocityX: " << newvelocityX
+        << " newvelocityY: " << newvelocityY <<endl;
+    cout<<__FUNCTION__ << " x: " << x
+        << " y: " << y <<endl;
+    cout<<__FUNCTION__ << " accelX: " << accelerationX
+        << " accelY: " << accelerationY <<endl;
+
+    CheckVelocity(newvelocityX);
+    CheckVelocity(newvelocityY);
 
     x += newvelocityX;
+
+    //check bounds of the game field and collision
+    if(x < 0 || x + width > windowWidth || CheckCollision(x, y))
+    {
+        x -= newvelocityX;
+        velocityX = newvelocityX = accelerationX = 0;
+    }
+
+
     y += newvelocityY;
+    if(y < 0 || y + height > windowHeight || CheckCollision(x, y))
+    {
+        y -= newvelocityY;
+        velocityY = newvelocityY = accelerationY = 0;
+    }
+
+
 
     velocityX = newvelocityX;
     velocityY = newvelocityY;
+}
+
+bool Character::CheckCollision(int x, int y)
+{
+    return false;
 }
 
 void Character::ChangeAccelX(double value)
@@ -100,4 +144,12 @@ void Character::ChangeAccelY(double value)
         accelerationY = -MAXIMUM_ACCEL;
 }
 
-};
+void Character::CheckVelocity(double &velocity)
+{
+    if( velocity > MAXIMUM_VELOCITY )
+        velocity = MAXIMUM_VELOCITY;
+    else if( velocity < -MAXIMUM_VELOCITY )
+        velocity = -MAXIMUM_VELOCITY;
+}
+
+}; //namespace DragonBron

@@ -40,72 +40,86 @@ namespace DragonBron
 
     int DragonGame::GameLoop()
     {
-        //process events
-        SDL_Event event;
-        while( SDL_PollEvent( &event ) )
+        bool quit = false;
+        int ret = 0;
+        while(!quit)
         {
-            std::cout<< "event type "<< event.type<<endl;
-//            if( event.type == SDL_QUIT )
-//                std::cout<< "Quitting!\n";
-//                return 0;
-            switch ( event.type )
+            //process events
+            SDL_Event event;
+            while( SDL_PollEvent( &event ) )
             {
-                case SDL_KEYDOWN:
-                    switch( event.key.keysym.sym )
-                    {
-                        case SDLK_LEFT:
-                            m_pBron->ChangeAccelX(-0.1);
-                            break;
-                        case SDLK_RIGHT:
-                            m_pBron->ChangeAccelX(0.1);
-                            break;
-                        case SDLK_UP:
-                            m_pBron->ChangeAccelY(-0.1);
-                            break;
-                        case SDLK_DOWN:
-                            m_pBron->ChangeAccelY(0.1);
-                            break;
-                        case SDLK_ESCAPE:
-                            std::cout<< "Got an escape!\n";
-                            return 0;
-                        default:
-                            m_pBron->accelerationX = 0.0;
-                            m_pBron->accelerationY = 0.0;
-                            break;
-                    }
-                    break;
-                default:
-                    break;
+                //std::cout<< "event type "<< event.type<<endl;
+    //            if( event.type == SDL_QUIT )
+    //                std::cout<< "Quitting!\n";
+    //                return 0;
+                switch ( event.type )
+                {
+                    case SDL_KEYDOWN:
+                        switch( event.key.keysym.sym )
+                        {
+                            case SDLK_LEFT:
+                                m_pBron->ChangeAccelX(-0.1);
+                                break;
+                            case SDLK_RIGHT:
+                                m_pBron->ChangeAccelX(0.1);
+                                break;
+                            case SDLK_UP:
+                                m_pBron->ChangeAccelY(-0.1);
+                                break;
+                            case SDLK_DOWN:
+                                m_pBron->ChangeAccelY(0.1);
+                                break;
+                            case SDLK_ESCAPE:
+                                std::cout<< "Got an escape!\n";
+                                ret = 0;
+                                quit = true;
+                            default:
+                                m_pBron->accelerationX += (-m_pBron->accelerationX *0.1);
+                                m_pBron->accelerationY += (-m_pBron->accelerationY *0.1);
+                                //m_pBron->accelerationX = 0.0;
+                                //m_pBron->accelerationY = 0.0;
+                                break;
+                        }
+                        break;
+                    case SDL_QUIT:
+                        std::cout<< "Got an escape!\n";
+                        ret = 0;
+                        quit = true;
+                    default:
+                        break;
+                }
             }
-        }
 
-        //clear the screen
-        SDL_RenderClear( renderer );
+            //clear the screen
+            SDL_RenderClear( renderer );
 
-        SDL_Texture *bg1 = DragonBron::LoadImage( "res/swamp_tile_bare.png", renderer );
-        SDL_Texture *bg2 = DragonBron::LoadImage( "res/swamp_tile_greenery.png", renderer );
-        SDL_DisplayMode mode;
-        SDL_GetCurrentDisplayMode( 0, &mode );
-        int bgW = 0, bgH = 0;
-        SDL_QueryTexture( bg1, NULL, NULL, &bgW, &bgH );
-        int horizontalTiles = ceil(mode.w / bgW), verticalTiles = ceil(mode.h / bgH);
-        for(int idx = 0; idx < horizontalTiles; idx++ )
-            for(int idy = 0; idy < verticalTiles; idy++ )
-                DragonBron::ApplySurface( idx*bgW, idy*bgH, bg1, renderer );
+            SDL_Texture *bg1 = DragonBron::LoadImage( "res/swamp_tile_bare.png", renderer );
+            SDL_Texture *bg2 = DragonBron::LoadImage( "res/swamp_tile_greenery.png", renderer );
+            SDL_DisplayMode mode;
+            SDL_GetCurrentDisplayMode( 0, &mode );
+            int bgW = 0, bgH = 0;
+            SDL_QueryTexture( bg1, NULL, NULL, &bgW, &bgH );
+            int horizontalTiles = ceil(mode.w / bgW), verticalTiles = ceil(mode.h / bgH);
+            for(int idx = 0; idx < horizontalTiles; idx++ )
+                for(int idy = 0; idy < verticalTiles; idy++ )
+                    DragonBron::ApplySurface( idx*bgW, idy*bgH, bg1, renderer );
 
-        SDL_DestroyTexture( bg1 );
-        SDL_DestroyTexture( bg2 );
+            SDL_DestroyTexture( bg1 );
+            SDL_DestroyTexture( bg2 );
 
-        //draw the characters
-        for (std::vector<Character *>::iterator iter = m_characters.begin(); iter != m_characters.end(); ++iter)
-        {
-            (*iter)->CalculateMovement();
-            (*iter)->Draw();
-        }
+            //draw the characters
+            for (std::vector<Character *>::iterator iter = m_characters.begin(); iter != m_characters.end(); ++iter)
+            {
+                (*iter)->CalculateMovement(SCREEN_WIDTH, SCREEN_HEIGHT);
+                (*iter)->Draw();
+            }
 
-        SDL_RenderPresent( renderer );
+            SDL_RenderPresent( renderer );
 
-        return 1;
+
+        } //end main game loop
+
+        return ret;
     }
 }
 

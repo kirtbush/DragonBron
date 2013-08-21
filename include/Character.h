@@ -13,11 +13,13 @@ class Character
         Character( std::string, SDL_Renderer * renderer );
         virtual ~Character();
         void Draw();
-        void CalculateMovement();
+        void CalculateMovement(double, double);
         void SetY( int );
         void SetX( int );
         int x;
         int y;
+        int width;
+        int height;
         double friction;
         double velocityX;
         double velocityY;
@@ -25,6 +27,9 @@ class Character
         double accelerationY;
         void ChangeAccelX(double);
         void ChangeAccelY(double);
+        void CheckVelocity(double &);
+        bool CheckCollision(int, int);
+
     protected:
     private:
         SDL_Renderer *m_pRenderer;

@@ -10,7 +10,7 @@ int main( int argc, char* args[] )
     DragonGame *game = new DragonGame();
     int ret = 0;
 
-    while( ret = game->GameLoop() );
+    ret = game->GameLoop();
 
     std::cout << "GameLoop returned "<< ret<< endl;
 
