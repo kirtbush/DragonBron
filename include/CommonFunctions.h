@@ -9,7 +9,7 @@
 #include "SDL_image.h"
 
 #define MAXIMUM_MOVEMENT      10
-#define MAXIMUM_ACCEL         2.0
+#define MAXIMUM_ACCEL         1.0
 #define MAXIMUM_VELOCITY      3.0
 
 namespace DragonBron
